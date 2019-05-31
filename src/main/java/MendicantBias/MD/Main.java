@@ -9,6 +9,7 @@ import javax.security.auth.login.LoginException;
 
 import org.json.simple.parser.ParseException;
 
+import Models.Report;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
@@ -60,6 +61,9 @@ public class Main extends ListenerAdapter
     
     @Override
     public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
+    	
+    	HTTP http = new HTTP();
+    	
     	String[] command = event.getMessage().getContentRaw().split(" ");
     	User user = event.getMessage().getAuthor();
     	String finalReport = "";
@@ -88,6 +92,10 @@ public class Main extends ListenerAdapter
     			eb.setColor(new Color(255, 0, 54));
     			
     			chan.sendMessage(eb.build()).queue();
+    			
+    			Report report = new Report(0, reportedUser.getId(), reportee.getId(), finalReport);
+    			
+    			http.addReport(report);
     		}
     	}
     	
