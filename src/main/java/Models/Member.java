@@ -1,6 +1,7 @@
 package Models;
 
-public class User {
+//This was and should be called User, but it conflicts with the JDA user so we're gonna go with Member instead (even though theres a JDA member too..)
+public class Member {
 	
 	private String userID;
 	private String warnings;
@@ -9,7 +10,7 @@ public class User {
 	private String username;
 	private String kicks;
 	
-	public User(String userID, String warnings, String bans, String joinDate, String username,String kicks) {
+	public Member(String userID, String username, String joinDate,  String warnings, String kicks, String bans) {
 		this.userID = userID;
 		this.warnings = warnings;
 		this.bans = bans;

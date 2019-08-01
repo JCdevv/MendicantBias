@@ -109,12 +109,12 @@ public class MAL implements Command
 	}
 	public String getUsage() {
 		
-		return "Replies with a Pong to your Ping";
+		return "``!mal anime/manga/char <name>`` e.g ``!mal anime Evangelion``";
 	}
 	
 	public String getDesc() {
 
-		return "Replies with a Pong to your Ping";
+		return "Searches MAL for the given query and returns at-a-glance information.";
 	}
 
 

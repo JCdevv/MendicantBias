@@ -46,15 +46,16 @@ import net.dv8tion.jda.core.entities.MessageEmbed.Field;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.managers.GuildController;
+import Models.Member;
 import Models.Report;
-import Models.User;
+
 
 public class HTTP
 {
 	
-	 public ArrayList<User> getAllUsers() {
+	 public ArrayList<Member> getAllUsers() {
 		 
-		 ArrayList<User> users = new ArrayList<>();
+		 ArrayList<Member> users = new ArrayList<>();
 		 HttpURLConnection urlConnection;
 	     InputStream in = null;
 	     try{
@@ -85,8 +86,8 @@ public class HTTP
 	             String kicks = jsonArray.getJSONObject(i).get("kicks").toString();
 	             String join = jsonArray.getJSONObject(i).get("joinDate").toString();
 
-	             User user = new User(username, userID, warnings,bans,join,kicks);
-	             users.add(user);
+	             Member member = new Member(username, userID, warnings,bans,join,kicks);
+	             users.add(member);
 
 	         }
 	     } catch (JSONException e) {
@@ -95,99 +96,116 @@ public class HTTP
 	     return users;
 	 }
 	 
-	public void addReport(Report report) {
-		
+	 public void addUser(Member member) {
 		 HashMap<String, String> params = new HashMap<String,String>();
-		
+			
          Gson gson = new Gson();
-         
-         String reportJson = gson.toJson(report);
+        
+         String reportJson = gson.toJson(member);
 
 
          System.out.println(reportJson);
 
-         params.put("report", reportJson);
+         params.put("user", reportJson);
 
-         String url = "http://localhost:8005/config/report";
-    
+         String url = "http://localhost:8005/config/api";
+   
          performPostCall(url, params);
 
      }
- 
-	public String performPostCall(String requestURL, HashMap<String, String> postDataParams) {
-		URL url;
-		String response = "";
-	
-		try {
-			url = new URL(requestURL);
-			
-			//create the connection object
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(15000);
-			conn.setConnectTimeout(15000);
-			conn.setRequestMethod("POST");
-			conn.setDoInput(true);
-			conn.setDoOutput(true);
-			
-			OutputStream os = conn.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-	
-			writer.write(getPostDataString(postDataParams));
-			writer.flush();
-			writer.close();
-			
-			os.close();
-	
-			int responseCode = conn.getResponseCode();
-			System.out.println("responseCode = " + responseCode);
-	
-			if (responseCode == HttpsURLConnection.HTTP_OK) {
-				String line;
-				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				while ((line = br.readLine()) != null) {
-					response += line;
-				}
-			} else {
-				response = "";
-			}
-	
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println("response = " + response);
-		return response;
-	}
+	 public void addReport(Report report) {
+		
+	   	  HashMap<String, String> params = new HashMap<String,String>();
+		
+          Gson gson = new Gson();
+         
+          String reportJson = gson.toJson(report);
 
 
-	private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+          System.out.println(reportJson);
+
+          params.put("report", reportJson);
+
+          String url = "http://localhost:8005/config/report";
+    
+          performPostCall(url, params);
+
+      }
+	 
+	  public String performPostCall(String requestURL, HashMap<String, String> postDataParams) {
+	   	  URL url;
+		  String response = "";
+	
+		  try {
+			  url = new URL(requestURL);
+			
+			  //create the connection object
+			  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			  conn.setReadTimeout(15000);
+			  conn.setConnectTimeout(15000);
+			  conn.setRequestMethod("POST");
+			  conn.setDoInput(true);
+			  conn.setDoOutput(true);
+			
+			  OutputStream os = conn.getOutputStream();
+			  BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+	
+			  writer.write(getPostDataString(postDataParams));
+			  writer.flush();
+			  writer.close();
+			
+			  os.close();
+	
+			  int responseCode = conn.getResponseCode();
+			  System.out.println("responseCode = " + responseCode);
+	
+			  if (responseCode == HttpsURLConnection.HTTP_OK) {
+				  String line;
+				  BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				  while ((line = br.readLine()) != null) {
+					  response += line;
+				  }
+			  } else {
+				  response = "";
+			  }
+	
+		  } catch (Exception e) {
+			  e.printStackTrace();
+		  }
+		  System.out.println("response = " + response);
+		  return response;
+	  }
+
+
+	  private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
 		
-		// Test api key
-		String apiKey = "abc123";
-		StringBuilder result = new StringBuilder();
-		boolean first = true;
-		for(Map.Entry<String, String> entry: params.entrySet()){
-			if (first){
-				first = false;
-	        }
-			else{
-				result.append("&");
-	        }
-	     result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-	     result.append("=");
-	     result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-	 }
+		  // Test api key
+		  String apiKey = "abc123";
+		  StringBuilder result = new StringBuilder();
+		  boolean first = true;
+		  for(Map.Entry<String, String> entry: params.entrySet()){
+			  if (first){
+				  first = false;
+	          }
+			  else{
+				  result.append("&");
+	          }
+	       result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+	       result.append("=");
+	       result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+	   }
 		
-		 result.append("&");
-	     result.append(URLEncoder.encode("apikey","UTF-8"));
-	     result.append("=");
-	     result.append(URLEncoder.encode(apiKey,"UTF-8"));
+		   result.append("&");
+	       result.append(URLEncoder.encode("apikey","UTF-8"));
+	       result.append("=");
+	       result.append(URLEncoder.encode(apiKey,"UTF-8"));
 	        
-		return result.toString();
-	 }
+		  return result.toString();
+	   }
 	
-	 public String convertStreamToString(InputStream is) {
-		 Scanner s = new Scanner(is).useDelimiter("\\A");
-	     return s.hasNext() ? s.next() : "";
-	}
+	   public String convertStreamToString(InputStream is) {
+		   Scanner s = new Scanner(is).useDelimiter("\\A");
+	       return s.hasNext() ? s.next() : "";
+	  }
 }
  
