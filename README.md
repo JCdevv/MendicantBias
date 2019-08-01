@@ -6,7 +6,7 @@ Current basic functionality as of initial commit:
 
 - MyAnimeList search using Jikan4Java.
 - Music/Radio support using Lavaplayer.
-- User report system (Poorly implemented ATM).
+- User report system 
 
 More to come.
 
