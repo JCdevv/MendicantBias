@@ -44,7 +44,7 @@ public class Help implements Command
         		+ "``!music`` \n"
         		+ "``!ping``";
         
-        if(member.getRoles().contains(Permission.BAN_MEMBERS)) {
+        if(member.hasPermission(Permission.BAN_MEMBERS)){
         	eb.setTitle("Commands");
         	eb.addField("Permissions Level", "Moderator", false);
         	eb.setDescription("For all commands, do !commandname usage/about for extra info");

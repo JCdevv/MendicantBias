@@ -1,6 +1,7 @@
 package MendicantBias.MD;
 
 import java.awt.Color;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ import net.dv8tion.jda.core.managers.GuildController;
 public class ReportHandler 
 {
    
-	public void execute(String[] args, PrivateMessageReceivedEvent event)  {
+	public void execute(String[] args, PrivateMessageReceivedEvent event) throws SQLException  {
 
     	HTTP http = new HTTP();
     	
@@ -47,7 +48,7 @@ public class ReportHandler
     				finalReport += " " + command[i];
     			}
     			
-    			TextChannel chan = event.getJDA().getTextChannelById("486900195624353803");
+    			TextChannel chan = event.getJDA().getTextChannelById(new DB().getReportID());
     			User reportedUser = event.getJDA().getUserById(command[1]);
     			
     			EmbedBuilder eb = new EmbedBuilder();

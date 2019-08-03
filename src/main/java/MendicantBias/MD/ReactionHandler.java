@@ -48,7 +48,13 @@ public class ReactionHandler
 					break;
 					
 					case "2\u20E3":
-						chan.sendMessage(user.getName() + " has highlighted this report").queue();
+							
+						MessageEmbed emb = m.getEmbeds().get(0);
+						EmbedBuilder embed = new EmbedBuilder(emb);
+						
+						embed.addField("Highlighted", "True", true);
+					
+						m.editMessage(embed.build()).queue();
 					break;
 				}	
 			}

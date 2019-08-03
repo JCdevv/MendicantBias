@@ -132,6 +132,39 @@ public class HTTP
 
       }
 	 
+	 public String getReportID() {
+		 String id = "";
+		 HttpURLConnection urlConnection;
+	     InputStream in = null;
+	     try{
+	    	 URL url = new URL("http://localhost:8005/config/api?apikey=abc123");
+
+	         urlConnection = (HttpURLConnection) url.openConnection();
+	         
+	         in = new BufferedInputStream(urlConnection.getInputStream());
+	     } catch(IOException e){
+	    	 e.printStackTrace();
+	     }
+
+	     String response = convertStreamToString(in);
+
+	     System.out.println("Server response = " + response);
+
+	     try {
+
+	         JSONArray jsonArray = new JSONArray(response);
+
+	         for (int i=0; i < jsonArray.length(); i++) {
+
+	             id  = jsonArray.getJSONObject(i).get("report_id").toString();
+	         }
+	     } catch (JSONException e) {
+	         e.printStackTrace();
+	         }
+	     return id;
+	 }
+	 
+	 
 	  public String performPostCall(String requestURL, HashMap<String, String> postDataParams) {
 	   	  URL url;
 		  String response = "";

@@ -2,6 +2,7 @@ package MendicantBias.MD;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.security.auth.login.LoginException;
@@ -43,7 +44,12 @@ public class Main extends ListenerAdapter
     			.buildBlocking();
         jda.addEventListener(new Main());
         createCommands();
-     
+        try {
+			loadConfig();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
  
     public static void createCommands() {
@@ -63,6 +69,7 @@ public class Main extends ListenerAdapter
 
     }
     
+    
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
     	
@@ -79,7 +86,12 @@ public class Main extends ListenerAdapter
     	
     	String[] command = event.getMessage().getContentRaw().split(" ");
 
-    	new ReportHandler().execute(command, event);
+    	try {
+			new ReportHandler().execute(command, event);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }
     
@@ -88,9 +100,7 @@ public class Main extends ListenerAdapter
     	
     	HTTP http = new HTTP();
     	User user = event.getUser();
-    	
     	String joinDate = event.getMember().getJoinDate().toString();
-    	
     	Member member = new Member(user.getId().toString(),user.getName(),joinDate,null,null,null);
     	
     	Thread thread = new Thread(new Runnable(){
@@ -98,10 +108,8 @@ public class Main extends ListenerAdapter
 				http.addUser(member);
 			}
 		});
-
 		
-		// thread.start();
-    
+		// thread.start();    
     }
     
     @Override
@@ -109,10 +117,7 @@ public class Main extends ListenerAdapter
         Message msg = event.getMessage();
         MessageChannel chan = event.getChannel();
         User user = event.getAuthor();
-
-
         String content = msg.getContentRaw();
-
 
         if(!content.startsWith(prefix)) return;
         String[] args = msg.getContentRaw().substring(prefix.length()).split(" ");
@@ -142,18 +147,35 @@ public class Main extends ListenerAdapter
     			chan.sendMessage(command.getDesc()).queue();
         	}
         	else if (!args[1].equals("usage") && !args[1].equals("about")){
-        		
-		                Command command = commandMap.get(args[0]);
-			        try {
-						command.execute(args, event);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-        		}
+        		Command command = commandMap.get(args[0]);
+			    try {
+			    	command.execute(args, event);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         	}
-	    }
+        }
     }
+    
+    public static void loadConfig() throws SQLException {
+    	
+    	DB db = new DB();
+    	HTTP http = new HTTP();
+    	
+    	String serverID = http.getReportID();
+    	String localID = db.getReportID();
+    	
+    	if(!serverID.equals(localID)) {
+    		db.setReportID(serverID);
+    		System.out.println("Local config updated");
+    	}
+    	else {
+    		System.out.println("Local config up to date");
+    	}
+    	
+    }
+}
