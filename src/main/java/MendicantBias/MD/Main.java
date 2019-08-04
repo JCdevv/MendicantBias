@@ -1,6 +1,5 @@
 package MendicantBias.MD;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -22,9 +21,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
-
-
 
 public class Main extends ListenerAdapter
 {
@@ -57,6 +53,8 @@ public class Main extends ListenerAdapter
         commandMap.put("music", new Music());
         commandMap.put("mal", new MAL());
         commandMap.put("help", new Help());
+        commandMap.put("info", new Info());
+        
         
     }
 
@@ -99,6 +97,7 @@ public class Main extends ListenerAdapter
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
     	
     	HTTP http = new HTTP();
+    	DB db = new DB();
     	User user = event.getUser();
     	String joinDate = event.getMember().getJoinDate().toString();
     	Member member = new Member(user.getId().toString(),user.getName(),joinDate,null,null,null);
@@ -106,10 +105,16 @@ public class Main extends ListenerAdapter
     	Thread thread = new Thread(new Runnable(){
 			public void run(){
 				http.addUser(member);
+				try {
+					db.addUser(member);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
-		// thread.start();    
+		thread.start();    
     }
     
     @Override

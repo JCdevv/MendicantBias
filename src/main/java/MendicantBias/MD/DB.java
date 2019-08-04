@@ -88,10 +88,62 @@ public class DB
 		}
 	}
 	
+	public boolean addUser(Member user) throws SQLException {
+		boolean b = false;
+		try {
+			String query = "INSERT INTO users VALUES (" + user.getUserID() + ",'" + user.getUsername() + "','" + user.getJoinDate() + "','" + user.getWarnings() +"','" + user.getKicks() + "','" + user.getBans() + "')"; 
+			System.out.println(query);
+			b = getConnection().execute(query);
+			closeConnection();
+			b = true;
+		} catch (SQLException s) {
+			throw new SQLException("User Not Added");
+		}
+		return b;
+	}
+	
+	public Member getMember(String ID) {
+		
+		Member member = null;
+		
+		try {
+			String sql = "select * from users WHERE user_id = " + ID + ";";
+			ResultSet resultset = getConnection().executeQuery(sql);
+			
+			if (resultset != null) {
+				
+				try {
+							
+					String user_id = resultset.getString("user_id");
+					String username = resultset.getString("username");
+					String joinDate = resultset.getString("joinDate");
+					String warnings = resultset.getString("warnings");
+					String kicks = resultset.getString("kicks");
+					String bans = resultset.getString("bans");
+					
+					member = new Member(user_id,username,joinDate,warnings,kicks,bans);
+
+					return member;
+					
+				} catch (SQLException s) {
+					s.printStackTrace();
+				}
+				
+				resultset.close();
+			}
+		} catch (SQLException s) {
+			System.out.println(s);
+		}
+
+		closeConnection();
+		
+		return member;
+	}
+	
 	public boolean setReportID(String id) throws SQLException {
 		boolean b = false;
 		try {
-			String query = "INSERT INTO config VALUES (" + id + ")";
+			String query = "UPDATE config SET report_channel_id = " + id + " WHERE report_channel_id = " + getReportID(); 
 			System.out.println(query);
 			b = getConnection().execute(query);
 			closeConnection();
