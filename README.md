@@ -10,6 +10,8 @@ Current basic functionality as of initial commit:
 
 More to come.
 
+I had to abandon the Mendicant Bias project in summer as final year uni approached, hopefully i can pick it back up in the future or in spare time down the line.
+
 
 
 
