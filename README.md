@@ -1,16 +1,14 @@
 # MendicantBias
 
-Mendicant Bias is a discord bot written in Java using JDA. Currently on it's second iteration as the first one was corrupted.
+Mendicant Bias is a discord bot written in Java using JDA. Currently on it's second iteration.
 
 Current basic functionality as of initial commit:
 
-- MyAnimeList search using Jikan4Java.
+- MAL search using Jikan4Java.
 - Music/Radio support using Lavaplayer.
-- User report system 
+- User report system and server connectivity.
 
-More to come.
-
-I had to abandon the Mendicant Bias project in summer as final year uni approached, hopefully i can pick it back up in the future or in spare time down the line.
+Project abandoned for now.
 
 
 
